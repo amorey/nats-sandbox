@@ -9,7 +9,6 @@ services:
       - "8222" # monitor
     environment:
       SERVER_NAME: nats1
-      CLUSTER_ADVERTISE: nats1
     command: nats-server -c /etc/config/nats/nats-server.conf
     volumes:
       - type: volume
@@ -31,7 +30,6 @@ services:
       - "8222" # monitor
     environment:
       SERVER_NAME: nats2
-      CLUSTER_ADVERTISE: nats2
     command: nats-server -c /etc/config/nats/nats-server.conf
     volumes:
       - type: volume
@@ -53,7 +51,6 @@ services:
       - "8222" # monitor
     environment:
       SERVER_NAME: nats3
-      CLUSTER_ADVERTISE: nats3
     command: nats-server -c /etc/config/nats/nats-server.conf
     volumes:
       - type: volume
@@ -67,12 +64,28 @@ services:
     networks:
       - intranet
 
+  nats-lb:
+    depends_on:
+      - nats1
+      - nats2
+      - nats3
+    image: haproxy:2.4.3-alpine
+    expose:
+      - "4222" # client
+    volumes:
+      - type: bind
+        source: develop/haproxy
+        target: /usr/local/etc/haproxy
+    restart: unless-stopped
+    networks:
+      - intranet
+
   nats-box:
     image: natsio/nats-box:0.13.2
     entrypoint: ["/bin/sleep", "infinity"]
     stop_grace_period: 0s
     environment:
-      NATS_URL: nats://nats1:4222
+      NATS_URL: nats://nats-lb:4222
     restart: "no"
     networks:
       - intranet

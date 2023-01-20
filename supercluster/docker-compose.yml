@@ -6,11 +6,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c1n1
       CLUSTER_ADVERTISE: c1n1
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c1-server.conf
     volumes:
       - type: volume
         source: c1n1-data
@@ -28,11 +29,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c1n2
       CLUSTER_ADVERTISE: c1n2
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c1-server.conf
     volumes:
       - type: volume
         source: c1n2-data
@@ -50,11 +52,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c1n3
       CLUSTER_ADVERTISE: c1n3
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c1-server.conf
     volumes:
       - type: volume
         source: c1n3-data
@@ -72,11 +75,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c2n1
       CLUSTER_ADVERTISE: c2n1
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c2-server.conf
     volumes:
       - type: volume
         source: c2n1-data
@@ -94,11 +98,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c2n2
       CLUSTER_ADVERTISE: c2n2
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c2-server.conf
     volumes:
       - type: volume
         source: c2n2-data
@@ -116,11 +121,12 @@ services:
     expose:
       - "4222" # client
       - "6222" # cluster
+      - "7222" # gateway
       - "8222" # monitor
     environment:
       SERVER_NAME: c2n3
       CLUSTER_ADVERTISE: c2n3
-    command: nats-server -c /etc/config/nats/nats-server.conf
+    command: nats-server -c /etc/config/nats/nats-c2-server.conf
     volumes:
       - type: volume
         source: c2n3-data
@@ -138,7 +144,7 @@ services:
     entrypoint: ["/bin/sleep", "infinity"]
     stop_grace_period: 0s
     environment:
-      NATS_URL: nats://c1n1:4222
+      NATS_URL: nats://c1n1:4222,nats://c2n1:4222
     restart: "no"
     networks:
       - intranet
