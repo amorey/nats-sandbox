@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  nats1:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: nats1
+      CLUSTER_ADVERTISE: nats1
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: nats1-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  nats2:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: nats2
+      CLUSTER_ADVERTISE: nats2
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: nats2-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  nats3:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: nats3
+      CLUSTER_ADVERTISE: nats3
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: nats3-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  nats-box:
+    image: natsio/nats-box:0.13.2
+    entrypoint: ["/bin/sleep", "infinity"]
+    stop_grace_period: 0s
+    environment:
+      NATS_URL: nats://nats1:4222
+    restart: "no"
+    networks:
+      - intranet
+
+networks:
+  intranet:
+
+volumes:
+  nats1-data:
+  nats2-data:
+  nats3-data:

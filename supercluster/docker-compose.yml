@@ -1,0 +1,155 @@
+version: '3.8'
+
+services:
+  c1n1:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c1n1
+      CLUSTER_ADVERTISE: c1n1
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c1n1-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  c1n2:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c1n2
+      CLUSTER_ADVERTISE: c1n2
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c1n2-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  c1n3:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c1n3
+      CLUSTER_ADVERTISE: c1n3
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c1n3-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  c2n1:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c2n1
+      CLUSTER_ADVERTISE: c2n1
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c2n1-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  c2n2:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c2n2
+      CLUSTER_ADVERTISE: c2n2
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c2n2-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  c2n3:
+    image: nats:2.9.6-alpine3.16
+    expose:
+      - "4222" # client
+      - "6222" # cluster
+      - "8222" # monitor
+    environment:
+      SERVER_NAME: c2n3
+      CLUSTER_ADVERTISE: c2n3
+    command: nats-server -c /etc/config/nats/nats-server.conf
+    volumes:
+      - type: volume
+        source: c2n3-data
+        target: /data/jetstream
+        read_only: false
+      - type: bind
+        source: develop/nats
+        target: /etc/config/nats
+    restart: unless-stopped
+    networks:
+      - intranet
+
+  nats-box:
+    image: natsio/nats-box:0.13.2
+    entrypoint: ["/bin/sleep", "infinity"]
+    stop_grace_period: 0s
+    environment:
+      NATS_URL: nats://c1n1:4222
+    restart: "no"
+    networks:
+      - intranet
+
+networks:
+  intranet:
+
+volumes:
+  c1n1-data:
+  c1n2-data:
+  c1n3-data:
+  c2n1-data:
+  c2n2-data:
+  c2n3-data:
