@@ -139,7 +139,17 @@ services:
     networks:
       - intranet
 
-  nats-box:
+  nats-box1:
+    image: natsio/nats-box:0.13.2
+    entrypoint: ["/bin/sleep", "infinity"]
+    stop_grace_period: 0s
+    environment:
+      NATS_URL: nats://c1n1:4222,nats://c2n1:4222
+    restart: "no"
+    networks:
+      - intranet
+
+  nats-box2:
     image: natsio/nats-box:0.13.2
     entrypoint: ["/bin/sleep", "infinity"]
     stop_grace_period: 0s
